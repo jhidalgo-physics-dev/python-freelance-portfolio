@@ -4,7 +4,7 @@ This repository contains Python projects demonstrating practical workflows in da
 
 ## Featured Projects
 
-### Momentum Stock Scanner(stock-scanner/)
+### [Momentum Stock Scanner](stock-scanner/)
 A Python tool that scans hundreds of stocks and identifies momentum candidates using gap percentage, trading volume, and relative volume.
 
 Features:
@@ -17,7 +17,7 @@ Features:
 
 ---
 
-### Stock Price Analysis(stock-analysis/)
+### [Stock Price Analysis](stock-analysis/)
 Downloads historical stock data and generates technical analysis charts using moving averages.
 
 Tools used:
@@ -27,7 +27,7 @@ Tools used:
 
 ---
 
-### Web Scraper(web-scraper/)
+### [Web Scraper](web-scraper/)
 Scrapes structured data from websites using BeautifulSoup and exports datasets to CSV.
 
 Tools used:
@@ -37,7 +37,7 @@ Tools used:
 
 ---
 
-### Data Cleaner(data-cleaner/)
+### [Data Cleaner](data-cleaner/)
 Automates cleaning messy datasets by removing duplicates, handling missing values, and standardizing columns.
 
 ## Technologies
