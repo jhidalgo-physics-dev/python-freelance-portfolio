@@ -1,11 +1,19 @@
 import yfinance as yf
 import pandas as pd
+import requests
+from io import StringIO
 
-# Load tickers from CSV
-ticker_df = pd.read_csv("tickers.csv")
-tickers = ticker_df["Ticker"].dropna().tolist()
+# Load S&P 500 ticker list from Wikipedia
+sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+headers = {"User-Agent": "Mozilla/5.0"}
 
-results = []
+response = requests.get(sp500_url, headers=headers, timeout=10)
+response.raise_for_status()
+
+html = StringIO(response.text)
+ticker_df = pd.read_html(html)[0]
+tickers = ticker_df["Symbol"].dropna().tolist()
+tickers = [ticker.replace(".", "-") for ticker in tickers]
 
 MIN_PRICE = 2
 MAX_PRICE = 300
@@ -13,20 +21,35 @@ MIN_VOLUME = 500_000
 MIN_GAP = -5
 MIN_REL_VOLUME = 0.8
 
+print(f"Downloading data for {len(tickers)} tickers...")
+
+data = yf.download(
+    tickers=tickers,
+    period="10d",
+    group_by="ticker",
+    auto_adjust=False,
+    progress=True,
+    threads=True
+)
+
+results = []
+
 for ticker in tickers:
     try:
-        data = yf.Ticker(ticker).history(period="10d", auto_adjust=False)
-
-        if data.empty or len(data) < 6:
-            print(f"Skipping {ticker}: not enough data")
+        if ticker not in data:
             continue
 
-        prev_close = data["Close"].iloc[-2]
-        today_open = data["Open"].iloc[-1]
-        price = data["Close"].iloc[-1]
-        volume = data["Volume"].iloc[-1]
+        ticker_data = data[ticker].dropna()
 
-        avg_volume = data["Volume"].iloc[-6:-1].mean()
+        if ticker_data.empty or len(ticker_data) < 6:
+            continue
+
+        prev_close = ticker_data["Close"].iloc[-2]
+        today_open = ticker_data["Open"].iloc[-1]
+        price = ticker_data["Close"].iloc[-1]
+        volume = ticker_data["Volume"].iloc[-1]
+
+        avg_volume = ticker_data["Volume"].iloc[-6:-1].mean()
         rel_volume = volume / avg_volume if avg_volume > 0 else 0
 
         gap_percent = ((today_open - prev_close) / prev_close) * 100
@@ -39,11 +62,11 @@ for ticker in tickers:
         ):
             results.append({
                 "Ticker": ticker,
-                "Price": round(price, 2),
-                "Gap %": round(gap_percent, 2),
+                "Price": round(float(price), 2),
+                "Gap %": round(float(gap_percent), 2),
                 "Volume": int(volume),
                 "Avg Volume": int(avg_volume),
-                "Rel Volume": round(rel_volume, 2)
+                "Rel Volume": round(float(rel_volume), 2)
             })
 
     except Exception as e:
