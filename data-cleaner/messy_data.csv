@@ -1,0 +1,7 @@
+Name, Email , Age, City
+Alice, alice@example.com, 25, New York
+Bob, bob@example.com, , Los Angeles
+Alice, alice@example.com, 25, New York
+Charlie, , 30, Chicago
+David, david@example.com, 22, 
+Emma, emma@example.com, 28, Houston
