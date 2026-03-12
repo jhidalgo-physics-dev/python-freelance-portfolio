@@ -1,48 +1,99 @@
-# Momentum Stock Scanner
+# Momentum Scanner
 
-A Python tool that scans stocks for momentum characteristics such as price gaps, volume spikes, and relative volume.
+A Python-based stock scanning tool designed to identify momentum candidates using gap percentage, trading volume, and relative volume.
+
+This project was built as a practical trading workflow tool and a demonstration of Python-based financial data analysis.
+
+---
 
 ## Features
 
-- Loads ticker universe from CSV
-- Calculates daily gap percentage
-- Filters by price range
-- Filters by minimum volume
-- Calculates relative volume
-- Ranks strongest candidates
-- Exports results to CSV
+* Scan S&P 500 or a custom momentum universe
+* Sort candidates by:
+
+  * Relative Volume
+  * Gap Percentage
+  * Volume
+* Configurable filter presets (testing or trading)
+* Relative volume calculation
+* Automatic CSV export of results
+* Timestamped scan history
+* Clean terminal summary output
+* Packaged executable version
+
+---
+
+## Example Output
+
+The scanner identifies candidates meeting momentum conditions and displays the top results.
+
+Example summary:
+
+```
+Scan Summary
+------------
+Universe: momentum
+Sort mode: gap
+Filter preset: trade
+Tickers scanned: 29
+Candidates found: 2
+Tickers skipped: 1
+```
+
+---
 
 ## Output Files
 
-scanner_results.csv  
-Full dataset of stocks that passed filters.
+Scan results are automatically saved to the `results` folder.
 
-watchlist.csv  
-Top candidates ranked by momentum metrics.
+Example:
 
-## Requirements
+```
+results/
+scan_momentum_gap_trade_2026-03-10_1245.csv
+watchlist_momentum_gap_trade_2026-03-10_1245.csv
+```
 
-Python packages:
+These files can be used for watchlists or further analysis.
 
-- pandas
-- yfinance
+---
 
-Install with:
+## Executable Version
 
-pip install pandas yfinance
+A standalone Windows executable can be generated using PyInstaller.
 
-## How to Run
+```
+py -m PyInstaller --onefile --name MomentumScanner gap_scanner.py
+```
 
-From the project folder:
+The resulting executable can be found in the `dist` folder.
 
-py gap_scanner.py
+Example application structure:
 
-## Configuration
+```
+MomentumScanner-App
+├── MomentumScanner.exe
+├── momentum_universe.csv
+└── results
+```
 
-Filters can be adjusted inside the script:
+---
 
-MIN_PRICE  
-MAX_PRICE  
-MIN_VOLUME  
-MIN_GAP  
-MIN_REL_VOLUME
+## Technologies Used
+
+* Python
+* Pandas
+* yfinance
+* requests
+* PyInstaller
+
+---
+
+## Future Improvements
+
+Planned enhancements include:
+
+* real-time momentum radar monitoring
+* customizable filter parameters
+* graphical dashboard interface
+* alert notifications for new signals
